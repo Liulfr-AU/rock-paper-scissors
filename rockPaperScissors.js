@@ -1,4 +1,3 @@
-// computer makes random choice of rock, paper, or scissors
 function getComputerChoice() {
     let computerChoice = Math.floor(Math.random() * 3);
     if (computerChoice == 0){
@@ -8,72 +7,73 @@ function getComputerChoice() {
     } else return 'scissors';
 }
 
-// player makes choice of rock, paper, or scissors
-function getPlayerChoice() {
-    let playerChoice = '';
-
-    while (true){
-    playerChoice = prompt('Make your choice', 'Rock / Paper / Scissors').toLowerCase();
-    if (playerChoice == 'rock' || playerChoice == 'paper' || playerChoice == 'scissors'){
-        return playerChoice; 
-    } else alert('Invalid choice');
+let menu = document.querySelector('#buttonContainer');
+menu.addEventListener('click', (event) => {
+    let target = event.target;
+    switch(target.id){
+        case 'rock':
+            playRound('rock')
+            break;
+        case 'paper':
+            playRound('paper')
+            break;
+        case 'scissors':
+        playRound('scissors')
+        break;
     }
-}
+});
 
-// round is played with winner announced
-function playRound(){
-    let playerChoice = getPlayerChoice();
+let playerScore = document.querySelector('#playerScore');
+let computerScore = document.querySelector('#computerScore');
+playerScore.textContent = 0;
+computerScore.textContent = 0;
+
+function playRound(input){
+    let playerChoice = input;
     let computerChoice = getComputerChoice();
 
-    console.log('Your choice: ' + playerChoice);
-    console.log('Computer\'s choice: ' + computerChoice);
+    let playerSelection = document.querySelector('#playerSelection');
+    let computerSelection = document.querySelector('#computerSelection');
+    playerSelection.textContent = 'Your choice: ' + playerChoice;
+    computerSelection.textContent = 'Computer\'s choice: ' + computerChoice;
+
+    let result = document.querySelector('#result');
 
     if (playerChoice == computerChoice){
-        console.log('DRAW!');
+        result.textContent = 'DRAW!';
     } else if (playerChoice == 'paper' && computerChoice == 'scissors'
         || playerChoice == 'scissors' && computerChoice == 'rock'
         || playerChoice == 'rock' && computerChoice == 'paper'){
-        console.log('YOU LOSE!');
-        return 'computer';
+        result.textContent = 'YOU LOSE!';
+        computerScore.textContent++;
     } else if (
         playerChoice == 'paper' && computerChoice == 'rock'
         || playerChoice == 'scissors' && computerChoice == 'paper'
         || playerChoice == 'rock' && computerChoice == 'scissors'){
-        console.log('YOU WIN!');
-        return 'player';
+        result.textContent = 'YOU WIN!';
+        playerScore.textContent++;
+    }
+
+    if (playerScore.textContent == 5){
+        result.textContent = 'YOU HAVE WON THE GAME!';
+        playAgain.style.display = 'block';
+        document.querySelectorAll('.buttonToggle').forEach((element => element.disabled = true));
+    }
+
+    if (computerScore.textContent ==5){
+        result.textContent = 'YOU HAVE LOST THE GAME!';
+        playAgain.style.display = 'block';
+        document.querySelectorAll('.buttonToggle').forEach((element => element.disabled = true));
     }
 }
 
-// a game of 5 rounds is played
-function playGame(){
-    let playerWins = 0;
-    let computerWins = 0;
-    let drawCount = 0;
-    let winner = '';
-
-    for (let i = 1; i <= 5; i++){
-        console.log(`---ROUND ${i}---`);
-        winner = playRound();
-
-        if (winner == 'player'){
-            playerWins++;
-        } else if (winner == 'computer'){
-            computerWins++;
-        } else drawCount++;
-    }
-
-    console.log('-------------')
-    console.log('Player Wins: ' + playerWins);
-    console.log('Computer Wins: ' + computerWins);
-    console.log('Draw: ' + drawCount);
-    console.log('-------------')
-
-    if (playerWins > computerWins){
-        console.log('!!! YOU HAVE WON !!!');
-    } else if (playerWins < computerWins){
-        console.log('!!! THE COMPUTER WINS !!!');
-    } else console.log('!!! IT\'S A DRAW !!!');
-
-}
-
-playGame();
+let playAgain = document.querySelector('#playAgainButton');
+playAgain.addEventListener("click", () => {
+    playerScore.textContent = 0;
+    computerScore.textContent = 0;
+    result.textContent = '';
+    playerSelection.textContent = '';
+    computerSelection.textContent = '';
+    playAgain.style.display = 'none';
+    document.querySelectorAll('.buttonToggle').forEach((element => element.disabled = false));
+})

@@ -1,3 +1,3 @@
 # rock-paper-scissors
 
-Rock paper scissors game to be played in the console.
+A rock paper scissors game with a simple GUI that you can play against the computer - the first to win five rounds is the winner!
